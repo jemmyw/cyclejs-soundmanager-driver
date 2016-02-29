@@ -1,0 +1,48 @@
+{
+  "name": "cyclejs-soundmanager-driver",
+  "version": "1.0.0",
+  "description": "CycleJS driver for soundmanager",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm run eslint",
+    "eslint": "eslint src/",
+    "uglify": "uglifyjs dist/cyclejs-soundmanager-driver.js -o dist/cyclejs-soundmanager-driver.min.js",
+    "browserify": "browserify src/index.js -t babelify -t browserify-shim --standalone CycleSoundmanagerDriver --exclude rx --outfile dist/cyclejs-soundmanager-driver.js",
+    "dist": "npm run browserify && npm run uglify",
+    "docs": "node ./scripts/make-api-docs.js",
+    "prepublish": "babel -d lib src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jemmyw/cyclejs-soundmanager-driver.git"
+  },
+  "keywords": [
+    "cyclejs",
+    "soundmanager"
+  ],
+  "author": "Jeremy Wells <jemmyw@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jemmyw/cyclejs-soundmanager-driver/issues"
+  },
+  "homepage": "https://github.com/jemmyw/cyclejs-soundmanager-driver#readme",
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
+    "browserify-shim": "^3.8.12",
+    "eslint": "^1.9.0",
+    "eslint-config-cycle": "^3.2.0",
+    "markdox": "^0.1.10",
+    "uglify-js": "^2.6.2"
+  },
+  "dependencies": {
+    "rx": "^4.0.8",
+    "soundmanager2": "^2.97.20150601-a"
+  },
+  "browserify-shim": {
+    "rx": "global:Rx"
+  }
+}
