@@ -1,8 +1,12 @@
 ui: mocha-bdd
-server: "python -m SimpleHTTPServer $ZUUL_PORT"
+server: "http-server -p $ZUUL_PORT"
 browsers:
   - name: chrome
     version: latest
+    platform: Mac 10.11
+  - name: firefox
+    version: latest
+    platform: Mac 10.11
 browserify:
   - transform:
       name: babelify

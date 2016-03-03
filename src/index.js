@@ -89,7 +89,6 @@ function soundEvent(sound, obs, event) {
 function soundError(sound, obs) {
   obs.onNext({
     id: sound.id,
-    sound: sound,
     scope: sound.scope,
     src: sound.url,
     error: true,
@@ -113,6 +112,7 @@ function createSound(obs, command) {
     onresume: () => soundEvent(thisSound, obs, `play`),
     onstop: () => soundEvent(thisSound, obs, `stop`),
     whileplaying: () => soundEvent(thisSound, obs, `playing`),
+    onfailure: (err) => soundEvent(thisSound, obs, `failure`, err),
   })
   thisSound.scope = command.scope
 
@@ -134,7 +134,7 @@ function performCommand(obs, command) {
   }
 
   if (action) {
-    if ([`play`, `resume`].includes(action)) {
+    if (~[`play`, `resume`].indexOf(action)) {
       soundManager.pauseAll()
     }
 
@@ -172,15 +172,20 @@ function isolateSource(source$, scope) {
   return isolatedSource$
 }
 
-function makeAudioDriver() {
+function makeAudioDriver(options) {
+  soundManager.setupOptions.url = '/node_modules/soundmanager2/swf/'
+  Object.keys(options).forEach(key => soundManager.setupOptions[key] = options[key])
+
+  const onready$ = Observable.create(obs => {
+    soundManager.setup({
+      onready: () => obs.onNext(soundManager)
+    })
+  })
+
   return function audioDriver(audio$) {
     const out$ = Observable.create(obs => {
-      soundManager.setup({
-        preferFlash: false,
-        debugMode: false,
-        onready: () => {
-          commandExecutor(audio$, obs)
-        },
+      onready$.subscribe(sm => {
+        commandExecutor(audio$, obs)
       })
 
       return () => {

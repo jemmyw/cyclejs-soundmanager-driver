@@ -1,8 +1,26 @@
 /* eslint quotes: 0, func-names: 0, max-nested-callbacks: 0 */
-/*global describe, it, beforeEach */
+/*global mocha, describe, it */
 import expect from 'unexpected'
 import {Observable, Subject} from 'rx'
 import {makeAudioDriver} from '../src'
+
+mocha.globals([
+  '__flash__arrayToXML',
+  '__flash__argumentsToXML',
+  '__flash__objectToXML',
+  '__flash__escapeXML',
+  '__flash__toXML',
+  '__flash__request',
+  '__flash_temp',
+  '__flash__addCallback',
+  '__flash__removeCallback',
+])
+
+const audioDriver = makeAudioDriver({
+  debugMode: false,
+  preferFlash: true,
+  useHTML5Audio: false,
+})
 
 function matches(obj, match) {
   return Object.keys(match).every(key => obj[key] === match[key])
@@ -20,12 +38,6 @@ function(ex, subject, spec) {
 })
 
 describe('soundmanager driver', function() {
-  let audioDriver
-
-  beforeEach(function() {
-    audioDriver = makeAudioDriver()
-  })
-
   it('loads an audio file when it receives the first command', function(done) {
     const audio$ = audioDriver(
       Observable.just({src: '/test/test.mp3'}))
@@ -50,6 +62,8 @@ describe('soundmanager driver', function() {
   })
 
   it('plays audio when it receives the play command', function(done) {
+    this.timeout(4000)
+
     const cmds$ = new Subject()
     const audio$ = audioDriver(cmds$).share()
 
@@ -75,6 +89,8 @@ describe('soundmanager driver', function() {
   })
 
   it('can pause and resume the audio', function(done) {
+    this.timeout(4000)
+
     const cmds$ = new Subject()
     const audio$ = audioDriver(cmds$).share()
 
@@ -102,6 +118,8 @@ describe('soundmanager driver', function() {
   })
 
   it('can stop the audio', function(done) {
+    this.timeout(4000)
+
     const cmds$ = new Subject()
     const audio$ = audioDriver(cmds$).share()
 
@@ -130,6 +148,8 @@ describe('soundmanager driver', function() {
 
   it('can load multiple files and will only play one at a time',
   function(done) {
+    this.timeout(4000)
+
     const cmds$ = new Subject()
     const audio$ = audioDriver(cmds$).share()
 
