@@ -114,10 +114,17 @@ function createSound(obs, command) {
     whileplaying: () => soundEvent(thisSound, obs, `playing`),
     onfailure: (err) => soundEvent(thisSound, obs, `failure`, err),
   })
-  thisSound.scope = command.scope
 
-  sounds[thisSound.id] = thisSound
-  return thisSound
+  if(thisSound) {
+    thisSound.scope = command.scope
+    sounds[thisSound.id] = thisSound
+  } else {
+    soundError({
+      scope: command.scope,
+      id: null,
+      url: command.src
+    }, obs);
+  }
 }
 
 function performCommand(obs, command) {
