@@ -73,7 +73,7 @@ const sounds = {}
 function soundEvent(sound, obs, event) {
   obs.onNext({
     id: sound.id,
-    sound: sound,
+    //sound: sound,
     event: event,
     position: sound.position,
     duration: sound.duration,

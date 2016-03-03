@@ -1,0 +1,8 @@
+ui: mocha-bdd
+server: "python -m SimpleHTTPServer $ZUUL_PORT"
+browsers:
+  - name: chrome
+    version: latest
+browserify:
+  - transform:
+      name: babelify

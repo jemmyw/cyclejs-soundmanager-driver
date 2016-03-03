@@ -1,10 +1,11 @@
 {
   "name": "cyclejs-soundmanager-driver",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "CycleJS driver for soundmanager",
   "main": "lib/index.js",
   "scripts": {
-    "test": "npm run eslint",
+    "test": "npm run eslint && npm run test-browser",
+    "test-browser": "zuul --local --open -- test/index.js",
     "eslint": "eslint src/",
     "uglify": "uglifyjs dist/cyclejs-soundmanager-driver.js -o dist/cyclejs-soundmanager-driver.min.js",
     "browserify": "browserify src/index.js -t babelify -t browserify-shim --standalone CycleSoundmanagerDriver --exclude rx --outfile dist/cyclejs-soundmanager-driver.js",
@@ -36,7 +37,10 @@
     "eslint": "^1.9.0",
     "eslint-config-cycle": "^3.2.0",
     "markdox": "^0.1.10",
-    "uglify-js": "^2.6.2"
+    "mocha": "^2.4.5",
+    "uglify-js": "^2.6.2",
+    "unexpected": "^10.9.1",
+    "zuul": "^3.9.0"
   },
   "dependencies": {
     "rx": "^4.0.8",
