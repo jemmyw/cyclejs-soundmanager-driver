@@ -1,8 +1,8 @@
 {
   "name": "cyclejs-soundmanager-driver",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CycleJS driver for soundmanager",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "npm run eslint",
     "eslint": "eslint src/",
