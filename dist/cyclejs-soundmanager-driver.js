@@ -6567,13 +6567,6 @@ function makeAudioDriver(options) {
       onready$.subscribe(function (sm) {
         commandExecutor(audio$, obs);
       });
-
-      return function () {
-        _soundmanager.soundManager.reboot();
-        Object.keys(sounds).forEach(function (id) {
-          return delete sounds[id];
-        });
-      };
     }).share();
 
     out$.isolateSource = isolateSource;

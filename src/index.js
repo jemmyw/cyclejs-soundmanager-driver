@@ -194,11 +194,6 @@ function makeAudioDriver(options) {
       onready$.subscribe(sm => {
         commandExecutor(audio$, obs)
       })
-
-      return () => {
-        soundManager.reboot()
-        Object.keys(sounds).forEach(id => delete sounds[id])
-      }
     }).share()
 
     out$.isolateSource = isolateSource
