@@ -115,25 +115,34 @@ function createSound(obs, command) {
     onfailure: (err) => soundEvent(thisSound, obs, `failure`, err),
   })
 
-  if(thisSound) {
+  if (thisSound) {
     thisSound.scope = command.scope
     sounds[thisSound.id] = thisSound
   } else {
     soundError({
       scope: command.scope,
       id: null,
-      url: command.src
-    }, obs);
+      url: command.src,
+    }, obs)
   }
 }
 
+function setRelativePosition(sound, relative) {
+  const newPosition = sound.position + relative
+  sound.setPosition(newPosition)
+}
+
 function performCommand(obs, command) {
-  const {id, position, progress, action, volume} = command
+  const {id, position, relative, progress, action, volume} = command
   const sound = sounds[id]
   if (!sound) { return obs.onError(new Error(`Could not find sound`)) }
 
   if (position) {
     sound.setPosition(position)
+  }
+
+  if (relative) {
+    setRelativePosition(sound, relative)
   }
 
   if (progress) {
@@ -181,17 +190,18 @@ function isolateSource(source$, scope) {
 
 function makeAudioDriver(options) {
   soundManager.setupOptions.url = '/node_modules/soundmanager2/swf/'
-  Object.keys(options).forEach(key => soundManager.setupOptions[key] = options[key])
+  Object.keys(options).forEach(key =>
+    soundManager.setupOptions[key] = options[key])
 
   const onready$ = Observable.create(obs => {
     soundManager.setup({
-      onready: () => obs.onNext(soundManager)
+      onready: () => obs.onNext(soundManager),
     })
   })
 
   return function audioDriver(audio$) {
     const out$ = Observable.create(obs => {
-      onready$.subscribe(sm => {
+      onready$.subscribe(() => {
         commandExecutor(audio$, obs)
       })
     }).share()
