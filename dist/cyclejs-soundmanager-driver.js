@@ -6486,9 +6486,15 @@ function createSound(obs, command) {
   }
 }
 
+function setRelativePosition(sound, relative) {
+  var newPosition = sound.position + relative;
+  sound.setPosition(newPosition);
+}
+
 function performCommand(obs, command) {
   var id = command.id;
   var position = command.position;
+  var relative = command.relative;
   var progress = command.progress;
   var action = command.action;
   var volume = command.volume;
@@ -6500,6 +6506,10 @@ function performCommand(obs, command) {
 
   if (position) {
     sound.setPosition(position);
+  }
+
+  if (relative) {
+    setRelativePosition(sound, relative);
   }
 
   if (progress) {
@@ -6564,7 +6574,7 @@ function makeAudioDriver(options) {
 
   return function audioDriver(audio$) {
     var out$ = _rx.Observable.create(function (obs) {
-      onready$.subscribe(function (sm) {
+      onready$.subscribe(function () {
         commandExecutor(audio$, obs);
       });
     }).share();

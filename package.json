@@ -1,6 +1,6 @@
 {
   "name": "cyclejs-soundmanager-driver",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "CycleJS driver for soundmanager",
   "main": "lib/index.js",
   "scripts": {
