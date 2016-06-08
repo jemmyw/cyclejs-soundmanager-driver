@@ -8,11 +8,9 @@
     "test-browser": "zuul --local --open -- test/index.js",
     "eslint": "eslint src/",
     "uglify": "uglifyjs dist/cyclejs-soundmanager-driver.js -o dist/cyclejs-soundmanager-driver.min.js",
-    "browserify": "browserify src/index.js -t babelify -t browserify-shim --standalone CycleSoundmanagerDriver --exclude rx --outfile dist/cyclejs-soundmanager-driver.js",
-    "dist": "npm run browserify && npm run uglify",
     "docs": "node ./scripts/make-api-docs.js",
     "babel": "babel -d lib src",
-    "prepublish": "npm run babel && npm run dist"
+    "prepublish": "npm run babel"
   },
   "repository": {
     "type": "git",
@@ -44,6 +42,7 @@
     "zuul": "^3.9.0"
   },
   "dependencies": {
+    "@cycle/rx-adapter": "^2.0.0",
     "rx": "^4.0.8",
     "soundmanager2": "^2.97.20150601-a"
   },

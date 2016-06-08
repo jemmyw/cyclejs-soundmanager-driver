@@ -1,5 +1,6 @@
 import {soundManager} from 'soundmanager2'
 import {Observable} from 'rx'
+import RxAdapter from '@cycle/rx-adapter'
 
 /**
 * ## SoundManager2 Driver
@@ -199,7 +200,7 @@ function makeAudioDriver(options) {
     })
   })
 
-  return function audioDriver(audio$) {
+  const audioDriver = function(audio$) {
     const out$ = Observable.create(obs => {
       onready$.subscribe(() => {
         commandExecutor(audio$, obs)
@@ -211,6 +212,9 @@ function makeAudioDriver(options) {
 
     return out$
   }
+
+  audioDriver.streamAdapter = RxAdapter
+  return audioDriver
 }
 
 export {makeAudioDriver}
