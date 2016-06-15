@@ -42,7 +42,7 @@
     "zuul": "^3.9.0"
   },
   "dependencies": {
-    "@cycle/rx-adapter": "^2.0.0",
+    "@cycle/rx-adapter": "^3.0.0",
     "rx": "^4.0.8",
     "soundmanager2": "^2.97.20150601-a"
   },
