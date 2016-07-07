@@ -165,10 +165,16 @@ function performCommand(obs, command) {
   soundEvent(sound, obs, `update`)
 }
 
+function performGlobalCommand(obs, command) {
+  soundManager[command.action]()
+}
+
 function commandExecutor(audio$, observer) {
   audio$.subscribe(command => {
     if (command.id) {
       performCommand(observer, command)
+    } else if (command.action) {
+      performGlobalCommand(observer, command)
     } else {
       createSound(observer, command)
     }
