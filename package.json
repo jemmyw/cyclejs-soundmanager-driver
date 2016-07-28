@@ -42,11 +42,8 @@
     "zuul": "^3.9.0"
   },
   "dependencies": {
-    "@cycle/rx-adapter": "^3.0.0",
-    "rx": "^4.0.8",
-    "soundmanager2": "^2.97.20150601-a"
-  },
-  "browserify-shim": {
-    "rx": "global:Rx"
+    "@cycle/xstream-adapter": "^3.0.2",
+    "soundmanager2": "^2.97.20150601-a",
+    "xstream": "^5.3.2"
   }
 }

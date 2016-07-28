@@ -1,6 +1,6 @@
 import {soundManager} from 'soundmanager2'
-import {Observable} from 'rx'
-import RxAdapter from '@cycle/rx-adapter'
+import xs from 'xstream'
+import XsAdapter from '@cycle/xstream-adapter'
 
 /**
 * ## SoundManager2 Driver
@@ -72,7 +72,7 @@ import RxAdapter from '@cycle/rx-adapter'
 const sounds = {}
 
 function soundEvent(sound, obs, event) {
-  obs.onNext({
+  obs.next({
     id: sound.id,
     //sound: sound,
     event: event,
@@ -88,7 +88,7 @@ function soundEvent(sound, obs, event) {
 }
 
 function soundError(sound, obs) {
-  obs.onNext({
+  obs.next({
     id: sound.id,
     scope: sound.scope,
     src: sound.url,
@@ -169,16 +169,22 @@ function performGlobalCommand(obs, command) {
   soundManager[command.action]()
 }
 
-function commandExecutor(audio$, observer) {
-  audio$.subscribe(command => {
-    if (command.id) {
-      performCommand(observer, command)
-    } else if (command.action) {
-      performGlobalCommand(observer, command)
-    } else {
-      createSound(observer, command)
-    }
-  })
+function commandExecutor(observer) {
+  const listener = {
+    next: command => {
+      if (command.id) {
+        performCommand(observer, command)
+      } else if (command.action) {
+        performGlobalCommand(observer, command)
+      } else {
+        createSound(observer, command)
+      }
+    },
+    complete: () => {},
+    error: err => observer.error(err),
+  }
+
+  return listener
 }
 
 function isolateSink(sink$, scope) {
@@ -200,18 +206,31 @@ function makeAudioDriver(options) {
   Object.keys(options).forEach(key =>
     soundManager.setupOptions[key] = options[key])
 
-  const onready$ = Observable.create(obs => {
-    soundManager.setup({
-      onready: () => obs.onNext(soundManager),
-    })
+  const onready$ = xs.create({
+    start: l => {
+      soundManager.setup({
+        onready: () => l.next(soundManager),
+      })
+    },
+    stop: () => {},
   })
 
   const audioDriver = function(audio$) {
-    const out$ = Observable.create(obs => {
-      onready$.subscribe(() => {
-        commandExecutor(audio$, obs)
-      })
-    }).share()
+    const out$ = xs.create({
+      start: l => {
+        this.exec = commandExecutor(l)
+        this.listener = {
+          next: () => audio$.addListener(this.exec),
+          complete: () => {},
+          error: () => {},
+        }
+        onready$.addListener(this.listener)
+      },
+      stop: () => {
+        onready$.removeListener(this.listener)
+        audio$.removeListener(this.exec)
+      },
+    })
 
     out$.isolateSource = isolateSource
     out$.isolateSink = isolateSink
@@ -219,7 +238,7 @@ function makeAudioDriver(options) {
     return out$
   }
 
-  audioDriver.streamAdapter = RxAdapter
+  audioDriver.streamAdapter = XsAdapter
   return audioDriver
 }
 
