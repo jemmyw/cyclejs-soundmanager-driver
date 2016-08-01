@@ -82,6 +82,7 @@ function soundEvent(sound, obs, event) {
     volume: sound.muted ? 0 : sound.volume,
     paused: sound.paused,
     playing: !sound.paused && sound.playState === 1,
+    loaded: sound.readyState === 3,
     src: sound.url,
     scope: sound.scope,
   })
