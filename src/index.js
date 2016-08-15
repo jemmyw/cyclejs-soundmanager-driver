@@ -152,9 +152,9 @@ function performCommand(obs, command) {
   }
 
   if (action) {
-    if (~[`play`, `resume`].indexOf(action)) {
-      soundManager.pauseAll()
-    }
+    // if (~[`play`, `resume`].indexOf(action)) {
+    //   soundManager.pauseAll()
+    // }
 
     sound[action]()
   }
